@@ -6,11 +6,15 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:26:44 by clsaad            #+#    #+#             */
-/*   Updated: 2023/07/31 14:36:57 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/08/01 15:29:36 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/ft_stdutil.h"
+
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
 
 void	*ft_memset(void *dest, int v, size_t n)
 {
@@ -70,4 +74,9 @@ int	ft_strcmp(const char *s1, const char *s2)
 	while (us1[index] == us2[index] && us1[index] != '\0')
 		++index;
 	return (us1[index] - us2[index]);
+}
+
+void ft_perror(const char *action)
+{
+	fprintf(stderr, "ft_traceroute: %s: %s\n", action, strerror(errno));
 }

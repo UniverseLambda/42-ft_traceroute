@@ -1,10 +1,10 @@
-.PHONY: all clean fclean re prod_reminder
+.PHONY: all clean fclean re prod_reminder run
 
 NAME := ft_traceroute
 
 BUILD_TYPE := DEV
 
-SRC_FILES := main.c cli.c slice.c slice_char.c slice_charptr.c ft_stdutil.c
+SRC_FILES := main.c cli.c slice.c slice_char.c slice_charptr.c ft_stdutil.c resolve.c ft_socket.c
 INC_FILES := slice.h
 
 SRCS_DIR := src
@@ -47,3 +47,6 @@ prod_reminder:
 	@echo "Re-check headers and sources listing in Makefile"
 	@echo "Launch the norm"
 	@echo "Remove the -fsanitize=undefined"
+
+run:	all
+	./ft_traceroute localhost

@@ -1,26 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_stdutil.h                                       :+:      :+:    :+:   */
+/*   resolve.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/31 14:25:49 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/01 14:58:30 by clsaad           ###   ########.fr       */
+/*   Created: 2023/07/31 17:28:36 by clsaad            #+#    #+#             */
+/*   Updated: 2023/07/31 17:30:58 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_STDUTIL_H
-# define FT_STDUTIL_H
+#ifndef RESOLVE_H
+# define RESOLVE_H
 
-# include <unistd.h>
+# include <stddef.h>
+# include <stdbool.h>
+# include <sys/socket.h>
 
-void	*ft_memset(void *dest, int v, size_t n);
-void	*ft_memcpy(void *dest, const void *src, size_t n);
-int		ft_memcmp(const void *s1, const void *s2, size_t n);
+typedef struct s_sockaddr_res
+{
+	struct sockaddr	sock_addr;
+	size_t			sock_addr_len;
+	bool			is_valid;
+}	t_sockaddr_res;
 
-int		ft_strcmp(const char *s1, const char *s2);
+t_sockaddr_res	select_interface(char *address);
 
-void	ft_perror(const char *action);
-
-#endif // FT_STDUTIL_H
+#endif // RESOLVE_H
