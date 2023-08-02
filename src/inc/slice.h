@@ -6,14 +6,14 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 13:00:21 by clsaad            #+#    #+#             */
-/*   Updated: 2023/07/31 15:33:48 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/08/02 10:08:19 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SLICE_H
 # define SLICE_H
 
-#include <stdlib.h>
+#include <stddef.h>
 
 typedef struct s_slice
 {

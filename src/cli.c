@@ -6,13 +6,14 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 11:30:50 by clsaad            #+#    #+#             */
-/*   Updated: 2023/07/31 15:43:04 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/08/02 14:08:31 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/cli.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "inc/ft_stdutil.h"
 
