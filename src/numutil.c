@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 13:19:24 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/02 16:12:51 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/08/04 13:45:40 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 #include <stdint.h>
 
-uint16_t	read_u16_be(const char *buffer)
+uint16_t	read_u16_be(const void *buffer)
 {
-	return (((uint16_t)buffer[0]) << 8 | buffer[1]);
+	const uint8_t	*bbuffer = buffer;
+
+	return (((uint16_t)bbuffer[0]) << 8 | bbuffer[1]);
 }

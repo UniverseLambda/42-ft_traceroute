@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 10:04:26 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/02 16:38:10 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/08/04 13:43:21 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ typedef struct icmphdr	t_icmphdr;
 
 static size_t	get_ipdata_offset(const void *ipv4_header)
 {
-	return ((((char *)ipv4_header)[0] & 0x0F) * 4);
+	return (((const struct iphdr *)ipv4_header)->ihl * 4);
 }
 
 static bool	is_buffer_sufficient(const char *buffer, size_t size, const char *iphdr)
 {
-	if (iphdr - buffer >= (ssize_t)size)
+	if ((ssize_t)size < iphdr - buffer)
 		return (false);
-	return (!(iphdr + get_ipdata_offset(iphdr) - buffer + 8 >= (ssize_t)size));
+	return ((ssize_t)size >= (iphdr + get_ipdata_offset(iphdr) + 8) - buffer);
 }
 
 static size_t	get_icmp_packet_type(const t_icmphdr *icmphdr)
@@ -42,51 +42,51 @@ static size_t	get_icmp_packet_type(const t_icmphdr *icmphdr)
 }
 
 #include <stdio.h>
-// #include <ctype.h>
-// static void dump_buffer(const char *buffer, size_t buf_size)
-// {
-// 	size_t i;
+#include <ctype.h>
+static void dump_buffer(const char *buffer, size_t buf_size)
+{
+	size_t i;
 
-// 	for (i = 0; i < (buf_size / 16) + !!(buf_size % 16); ++i)
-// 	{
-// 		printf("%ld\t|\t", i * 16);
+	for (i = 0; i < (buf_size / 16) + !!(buf_size % 16); ++i)
+	{
+		printf("%ld\t|\t", i * 16);
 
-// 		size_t j;
-// 		for (j = 0; j < 16; ++j)
-// 		{
-// 			if (j == 8)
-// 				putchar(' ');
-// 			if (j + (i * 16) >= buf_size)
-// 			{
-// 				printf("   ");
-// 			}
-// 			else
-// 			{
-// 				int v = (int)buffer[j + (i * 16)] & 0xFF;
-// 				printf("%.2X ", v);
-// 			}
-// 		}
+		size_t j;
+		for (j = 0; j < 16; ++j)
+		{
+			if (j == 8)
+				putchar(' ');
+			if (j + (i * 16) >= buf_size)
+			{
+				printf("   ");
+			}
+			else
+			{
+				int v = (int)buffer[j + (i * 16)] & 0xFF;
+				printf("%.2X ", v);
+			}
+		}
 
-// 		printf("   ");
-// 		for (j = 0; j < 16; ++j)
-// 		{
-// 			if (j == 8)
-// 				putchar(' ');
-// 			if (j + (i * 16) >= buf_size)
-// 			{
-// 				printf("   ");
-// 			}
-// 			else
-// 			{
-// 				char c = buffer[j + (i * 16)];
-// 				printf("%c ", isprint(c) ? c : '.');
-// 			}
-// 		}
+		printf("   ");
+		for (j = 0; j < 16; ++j)
+		{
+			if (j == 8)
+				putchar(' ');
+			if (j + (i * 16) >= buf_size)
+			{
+				printf("   ");
+			}
+			else
+			{
+				char c = buffer[j + (i * 16)];
+				printf("%c ", isprint(c) ? c : '.');
+			}
+		}
 
-// 		puts("");
-// 	}
-// 	puts("");
-// }
+		puts("");
+	}
+	puts("");
+}
 
 t_icmp_res	parse_icmp_resp(const char *buffer, size_t size, int start_port, int end_port)
 {
@@ -95,16 +95,9 @@ t_icmp_res	parse_icmp_resp(const char *buffer, size_t size, int start_port, int 
 	const char		*orig_data;
 	t_icmp_res		result;
 
-	// dump_buffer(buffer, size);
-	// printf("offset icmphdr:    %ld\n", (const char *)icmphdr - buffer);
-	// printf("offset orig_iphdr: %ld\n", orig_iphdr - buffer);
 	ft_memset(&result, 0, sizeof(result));
 	if (!is_buffer_sufficient(buffer, size, orig_iphdr))
-	// {
-	// 	printf("Buf size: %zu\n", size);
-	// 	puts("A");
 		return (result);
-	// }
 	orig_data = orig_iphdr + get_ipdata_offset(orig_iphdr);
 	result.icmp_packet_type = get_icmp_packet_type(icmphdr);
 	if (result.icmp_packet_type == ICMP_INVALID_TYPE)
@@ -113,7 +106,10 @@ t_icmp_res	parse_icmp_resp(const char *buffer, size_t size, int start_port, int 
 		return (result);
 	result.dst_port = read_u16_be(orig_data + 2);
 	if (start_port > result.dst_port || result.dst_port >= end_port)
+	{
+		dump_buffer(buffer, size);
 		return (result);
+	}
 	result.src_port = read_u16_be(orig_data);
 	ft_memcpy(&(result.emitter.s_addr), buffer + 12, 4);
 	ft_memcpy(&(result.target.s_addr), orig_iphdr + 16, 4);
