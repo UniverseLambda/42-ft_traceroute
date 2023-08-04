@@ -4,7 +4,7 @@ NAME := ft_traceroute
 
 BUILD_TYPE := DEV
 
-SRC_FILES := main.c cli.c slice.c slice_char.c slice_charptr.c ft_stdutil.c resolve.c ft_socket.c ft_time.c ft_icmp.c numutil.c
+SRC_FILES := main.c cli.c slice.c slice_char.c slice_charptr.c ft_stdutil.c resolve.c ft_socket.c ft_time.c ft_icmp.c numutil.c ft_store.c ft_store_val.c
 INC_FILES := slice.h
 
 SRCS_DIR := src

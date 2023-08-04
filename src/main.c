@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 11:30:51 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/04 13:32:11 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/08/04 15:35:42 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,13 @@
 #include "inc/ft_socket.h"
 #include "inc/ft_time.h"
 #include "inc/ft_icmp.h"
+#include "inc/ft_store.h"
 
 #define START_PORT 33434
+
+#define ST_TT_PRINT 0
+#define ST_HOP_COUNT 1
+#define ST_REACHED 2
 
 typedef	struct s_window
 {
@@ -44,39 +49,42 @@ typedef struct s_recv_time_inf
 {
 	uint64_t		rtt;
 	struct in_addr	addr;
+	bool			reached;
 }	t_recv_time_inf;
 
-static void	print_time(t_resp_inf resp, t_recv_time_inf *receive_time, size_t *receive_time_offset, bool timeout)
+static bool	print_time(t_resp_inf resp, t_recv_time_inf *receive_time, size_t *receive_time_offset, bool timeout)
 {
-	static size_t			total_printed = 0;
-	static size_t			hop_count = 0;
 	static struct in_addr	last_address;
-	bool					is_looping;
+	t_recv_time_inf 		*curr;
 
 	while (*receive_time_offset < resp.count)
 	{
-		is_looping = timeout || receive_time[*receive_time_offset].rtt != 0;
-		if (!is_looping)
+		curr = receive_time + *receive_time_offset;
+		if (!timeout && curr->rtt == 0)
 			break ;
-		if ((total_printed % 3) == 0)
+		if ((store_get(ST_TT_PRINT).uint % 3) == 0)
 		{
+			if (store_get(ST_REACHED).uint)
+				return (true);
 			ft_memset(&last_address, 0, sizeof(last_address));
-			printf("%2lu", ++hop_count);
+			printf("%2lu", store_add(ST_HOP_COUNT, storev_uint(1)).uint);
 		}
-		if (receive_time[*receive_time_offset].rtt != 0)
+		if (curr->rtt != 0)
 		{
-			if (ft_memcmp(&last_address, &(receive_time[*receive_time_offset].addr), sizeof(last_address)))
-				printf("  %s", inet_ntoa(receive_time[*receive_time_offset].addr));
-			printf("  %.3f ms", (double)(receive_time[*receive_time_offset].rtt) / 1000.0);
-			ft_memcpy(&last_address, &(receive_time[*receive_time_offset].addr), sizeof(last_address));
+			if (ft_memcmp(&last_address, &(curr->addr), sizeof(last_address)))
+				printf("  %s", inet_ntoa(curr->addr));
+			printf("  %.3f ms", (double)(curr->rtt) / 1000.0);
+			ft_memcpy(&last_address, &(curr->addr), sizeof(last_address));
+			store_cmpxchg(ST_REACHED, storev_zero(), storev_uint(curr->reached));
 		}
-		else if (timeout)
+		else
 			printf("  *");
-		total_printed += is_looping;
-		*receive_time_offset += is_looping;
-		if (total_printed && total_printed % 3 == 0)
+		store_add(ST_TT_PRINT, storev_uint(1));
+		*receive_time_offset += 1;
+		if (store_get(ST_TT_PRINT).uint && store_get(ST_TT_PRINT).uint % 3 == 0)
 			printf("\n");
 	}
+	return (false);
 }
 
 static void	handle_response(t_resp_inf resp, size_t buffer_len, t_recv_time_inf *receive_time)
@@ -84,15 +92,16 @@ static void	handle_response(t_resp_inf resp, size_t buffer_len, t_recv_time_inf 
 	const uint64_t		received = now_micro();
 	const int			port_end = resp.window_port_start + resp.count;
 	const t_icmp_res	icmp_res = parse_icmp_resp(resp.buffer, buffer_len, resp.window_port_start, port_end);
+	const size_t		idx = icmp_res.dst_port - resp.window_port_start;
 
 	if (!icmp_res.valid)
 		return ;
-	receive_time[icmp_res.dst_port - resp.window_port_start].rtt = received - resp.sent_time;
-	receive_time[icmp_res.dst_port - resp.window_port_start].addr = icmp_res.emitter;
-	// icmp_res.
+	receive_time[idx].rtt = received - resp.sent_time;
+	receive_time[idx].addr = icmp_res.emitter;
+	receive_time[idx].reached = icmp_res.icmp_packet_type == ICMP_PORT_UNREACHABLE;
 }
 
-static void	listen_response(int raw_socket, t_window window_start, size_t count)
+static bool	listen_response(int raw_socket, t_window window_start, size_t count)
 {
 	char				buffer[512];
 	ssize_t				buffer_len;
@@ -109,15 +118,16 @@ static void	listen_response(int raw_socket, t_window window_start, size_t count)
 		if (buffer_len > 0)
 		{
 			handle_response(resp_inf, (size_t)buffer_len, receive_time);
-			print_time(resp_inf, receive_time, &receive_time_offset, false);
+			if (print_time(resp_inf, receive_time, &receive_time_offset, false))
+				return (true);
 		}
 		if (now_micro() - resp_inf.sent_time >= 5000000)
 			break;
 	}
-	print_time(resp_inf, receive_time, &receive_time_offset, true);
+	return (print_time(resp_inf, receive_time, &receive_time_offset, true));
 }
 
-static void	loop(/* int udp_socket, */int raw_socket, t_sockaddr_res addr)
+static void	loop(int raw_socket, t_sockaddr_res addr)
 {
 	size_t		iter_sent;
 	t_window	current_window;
@@ -143,7 +153,8 @@ static void	loop(/* int udp_socket, */int raw_socket, t_sockaddr_res addr)
 			}
 			((struct sockaddr_in *)&addr.sock_addr)->sin_port += ntohs(1);
 		}
-		listen_response(raw_socket, previous_window, iter_sent - 1);
+		if (listen_response(raw_socket, previous_window, iter_sent - 1))
+			break ;
 		previous_window = current_window;
 	}
 }
@@ -153,19 +164,16 @@ int main(int argc, char **argv)
 	char				*target;
 	t_sockaddr_res		sockaddr;
 	struct sockaddr_in	*addr_in;
-	// int					udp_socket;
 	int					raw_socket;
 
 	target = cli(slice_new(argv + 1, argc - 1));
 	sockaddr = select_interface(target);
 	addr_in = (struct sockaddr_in *)&sockaddr.sock_addr;
-	// udp_socket = create_udp_socket();
 	raw_socket = create_raw_socket();
 	set_socket_timeout(raw_socket, 0, 100000);
 	addr_in->sin_port = ntohs(START_PORT);
 	printf("traceroute to %s (%s), 30 hops max, 15 byte packets\n", target, inet_ntoa(addr_in->sin_addr));
-	loop(/* udp_socket, */ raw_socket, sockaddr);
-	// close(udp_socket);
+	loop(raw_socket, sockaddr);
 	close(raw_socket);
 	return (0);
 }
