@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 13:38:55 by clsaad            #+#    #+#             */
-/*   Updated: 2023/07/31 14:08:21 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/08/04 16:34:25 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ char	*slice_charptr_get(t_slice *self, size_t index)
 	return (slice_charptr(self)[index]);
 }
 
-void	slice_charptr_buildfrom(t_slice *self, t_fn_slice_cptr_bf fn, void *builder)
+void	slice_charptr_buildfrom(t_slice *self, t_fn_slice_cptr_bf fn,
+			void *builder)
 {
 	size_t	index;
 

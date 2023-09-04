@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 14:17:08 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/04 14:47:24 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/08/04 16:42:13 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ typedef union u_store_val
 t_store_val	store_get(size_t slot);
 t_store_val	store_set(size_t slot, t_store_val val);
 t_store_val	*store_ptr(size_t slot);
-bool		store_cmpxchg(size_t slot, t_store_val old, t_store_val new);
+bool		store_cmpswp(size_t slot, t_store_val old, t_store_val new);
 t_store_val	store_add(size_t slot, t_store_val val);
 
 t_store_val	storev_uint(size_t v);
 t_store_val	storev_sint(ssize_t v);
 t_store_val	storev_ptr(void *v);
-t_store_val	storev_zero();
+t_store_val	storev_zero(void);
 
 #endif // FT_STORE_H

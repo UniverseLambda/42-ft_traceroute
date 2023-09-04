@@ -1,24 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_socket.h                                        :+:      :+:    :+:   */
+/*   resp_inf.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/01 12:55:59 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/04 17:01:59 by clsaad           ###   ########.fr       */
+/*   Created: 2023/08/04 17:17:46 by clsaad            #+#    #+#             */
+/*   Updated: 2023/08/04 17:21:43 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SOCKET_H
-# define FT_SOCKET_H
+#ifndef RESP_INF_H
+# define RESP_INF_H
 
 # include <stddef.h>
+# include <stdint.h>
 
-int		create_raw_socket(void);
-int		create_udp_socket(int ttl);
+# include "window.h"
 
-void	set_socket_ttl(int fd, int ttl);
-void	set_socket_timeout(int fd, size_t seconds, size_t micro);
+typedef struct s_response_info
+{
+	uint64_t	sent_time;
+	uint64_t	window_port_start;
+	char		*buffer;
+	size_t		count;
+	size_t		hop_offset;
+}	t_resp_inf;
 
-#endif // FT_SOCKET_H
+t_resp_inf	new_resp_inf(t_window win, size_t count, char *buf);
+
+#endif // RESP_INF_H

@@ -6,14 +6,14 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 13:20:55 by clsaad            #+#    #+#             */
-/*   Updated: 2023/07/31 14:23:29 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/08/04 16:32:51 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLI_H
 # define CLI_H
 
-#include "slice.h"
+# include "slice.h"
 
 char	*cli(t_slice args);
 

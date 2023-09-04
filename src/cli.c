@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 11:30:50 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/02 14:08:31 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/08/04 16:35:07 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ struct	s_cli_builder
 };
 
 __attribute__ ((__noreturn__))
-static void	usage()
+static void	usage(void)
 {
 	fprintf(stderr, "Usage:\n  traceroute host\nOptions:\n");
 	fprintf(stderr, "  --help                      Read this help and exit\n");
@@ -47,13 +47,13 @@ static void	extra_arg(size_t idx, char *host)
 	idx += 1;
 	fprintf(stderr,
 		"Extra arg `%s' (position %zu, argc %zu)\n",
-			host,
-			idx,
-			idx);
+		host,
+		idx,
+		idx);
 	exit(2);
 }
 
-static void build_from(struct s_cli_builder *builder, char *arg)
+static void	build_from(struct s_cli_builder *builder, char *arg)
 {
 	if (arg[0] == '-')
 	{
@@ -65,7 +65,7 @@ static void build_from(struct s_cli_builder *builder, char *arg)
 	if (builder->host != NULL)
 		extra_arg(builder->index, arg);
 	builder->host = arg;
-	builder->index +=1;
+	builder->index += 1;
 }
 
 char	*cli(t_slice args)

@@ -2,10 +2,38 @@
 
 NAME := ft_traceroute
 
-BUILD_TYPE := DEV
+BUILD_TYPE := PROD
 
-SRC_FILES := main.c cli.c slice.c slice_char.c slice_charptr.c ft_stdutil.c resolve.c ft_socket.c ft_time.c ft_icmp.c numutil.c ft_store.c ft_store_val.c
-INC_FILES := slice.h
+SRC_FILES := cli.c \
+				ft_icmp.c \
+				ft_socket.c \
+				ft_stdutil.c \
+				ft_store_val.c \
+				ft_store.c \
+				ft_time.c \
+				main.c \
+				numutil.c \
+				print_time.c \
+				resolve.c \
+				resp_inf.c \
+				slice_char.c \
+				slice_charptr.c \
+				slice.c \
+				window.c
+
+INC_FILES := base.h \
+				cli.h \
+				ft_icmp.h \
+				ft_socket.h \
+				ft_stdutil.h \
+				ft_store.h \
+				ft_time.h \
+				numutil.h \
+				print_time.h \
+				resolve.h \
+				resp_inf.h \
+				slice.h \
+				window.h
 
 SRCS_DIR := src
 INCS_DIR := inc

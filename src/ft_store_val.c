@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 14:41:27 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/04 14:43:31 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/08/04 16:39:01 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_store_val	storev_ptr(void *v)
 	return ((t_store_val){.ptr = v});
 }
 
-t_store_val	storev_zero()
+t_store_val	storev_zero(void)
 {
 	return ((t_store_val){.uint = 0});
 }

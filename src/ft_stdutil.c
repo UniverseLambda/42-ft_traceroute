@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:26:44 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/01 15:29:36 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/08/04 16:37:45 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (us1[index] - us2[index]);
 }
 
-void ft_perror(const char *action)
+void	ft_perror(const char *action)
 {
 	fprintf(stderr, "ft_traceroute: %s: %s\n", action, strerror(errno));
 }

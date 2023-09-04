@@ -6,9 +6,11 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 11:36:50 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/01 15:40:16 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/08/04 17:06:16 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "inc/ft_socket.h"
 
 #include <stdio.h>
 #include <arpa/inet.h>
@@ -19,7 +21,7 @@
 
 #include "inc/ft_stdutil.h"
 
-int	create_raw_socket()
+int	create_raw_socket(void)
 {
 	int	fd;
 
@@ -29,13 +31,14 @@ int	create_raw_socket()
 	return (fd);
 }
 
-int	create_udp_socket()
+int	create_udp_socket(int ttl)
 {
 	int					fd;
 
 	fd = socket(AF_INET, SOCK_DGRAM, 0);
 	if (fd == -1)
 		ft_perror("socket");
+	set_socket_ttl(fd, ttl);
 	return (fd);
 }
 

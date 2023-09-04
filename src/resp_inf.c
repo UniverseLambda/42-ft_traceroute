@@ -1,24 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_socket.h                                        :+:      :+:    :+:   */
+/*   resp_inf.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/01 12:55:59 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/04 17:01:59 by clsaad           ###   ########.fr       */
+/*   Created: 2023/08/04 17:17:22 by clsaad            #+#    #+#             */
+/*   Updated: 2023/08/04 17:23:10 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SOCKET_H
-# define FT_SOCKET_H
+#include "inc/resp_inf.h"
 
-# include <stddef.h>
+#include "inc/base.h"
+#include "inc/ft_time.h"
 
-int		create_raw_socket(void);
-int		create_udp_socket(int ttl);
+t_resp_inf	new_resp_inf(t_window win, size_t count, char *buf)
+{
+	t_resp_inf	res;
 
-void	set_socket_ttl(int fd, int ttl);
-void	set_socket_timeout(int fd, size_t seconds, size_t micro);
-
-#endif // FT_SOCKET_H
+	res.sent_time = now_micro();
+	res.window_port_start = START_PORT + (3 * win.start_hop)
+		+ win.hop_offset;
+	res.buffer = buf;
+	res.count = count;
+	res.hop_offset = win.hop_offset;
+	return (res);
+}

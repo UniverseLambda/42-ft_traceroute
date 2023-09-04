@@ -1,24 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_socket.h                                        :+:      :+:    :+:   */
+/*   window.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/01 12:55:59 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/04 17:01:59 by clsaad           ###   ########.fr       */
+/*   Created: 2023/08/04 17:17:46 by clsaad            #+#    #+#             */
+/*   Updated: 2023/08/04 17:18:35 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SOCKET_H
-# define FT_SOCKET_H
+#ifndef WINDOW_H
+# define WINDOW_H
 
 # include <stddef.h>
 
-int		create_raw_socket(void);
-int		create_udp_socket(int ttl);
+typedef struct s_window
+{
+	size_t	start_hop;
+	size_t	hop_offset;
+}	t_window;
 
-void	set_socket_ttl(int fd, int ttl);
-void	set_socket_timeout(int fd, size_t seconds, size_t micro);
+void	inc_window(t_window	*window);
 
-#endif // FT_SOCKET_H
+#endif // WINDOW_H

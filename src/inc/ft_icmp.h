@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 11:13:29 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/02 14:55:17 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/08/04 16:46:21 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ typedef struct s_icmp_res
 {
 	bool			valid;
 
-	size_t			icmp_packet_type;
+	size_t			packet_type;
 	struct in_addr	emitter;
 
 	struct in_addr	target;
@@ -35,6 +35,7 @@ typedef struct s_icmp_res
 	int				dst_port;
 }	t_icmp_res;
 
-t_icmp_res	parse_icmp_resp(const char *buffer, size_t size, int start_port, int end_port);
+t_icmp_res	parse_icmp_resp(const char *buffer, size_t size,
+				int start_port, int end_port);
 
 #endif // FT_ICMP_H
