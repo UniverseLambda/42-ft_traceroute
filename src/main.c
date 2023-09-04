@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 11:30:51 by clsaad            #+#    #+#             */
-/*   Updated: 2023/09/04 10:42:37 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/09/04 15:49:17 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,7 @@ static bool	listen_response(int raw_socket, t_window window_start, size_t count)
 		buffer_len = recvfrom(raw_socket,
 				&buffer, sizeof(buffer), MSG_WAITALL, NULL, NULL);
 		if (buffer_len > 0)
-		{
 			handle_response(resp_inf, (size_t)buffer_len, receive_time);
-			if (print_time(resp_inf, receive_time, &receive_time_offset, false))
-				return (true);
-		}
 		if (now_micro() - resp_inf.sent_time >= 5000000)
 			break ;
 	}

@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/04 10:37:09 by clsaad            #+#    #+#             */
-/*   Updated: 2023/09/04 10:49:09 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/09/04 15:12:29 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,23 @@
 #include "inc/base.h"
 #include "inc/ft_store.h"
 #include "inc/ft_stdutil.h"
+#include "inc/resolve.h"
+
+static void	print_address(t_recv_time_inf *curr)
+{
+	const char	*resolved = resolve_cache_addr(&(curr->addr));
+	const char	*num_addr = inet_ntoa(curr->addr);
+
+	if (resolved[0])
+		printf("  %s (%s)", resolved, num_addr);
+	else
+		printf("  %s (%s)", num_addr, num_addr);
+}
 
 static void	print_no_timeout(t_ip_addr *last_address, t_recv_time_inf *curr)
 {
 	if (ft_memcmp(last_address, &(curr->addr), sizeof(*last_address)))
-		printf("  %s", inet_ntoa(curr->addr));
+		print_address(curr);
 	printf("  %.3f ms", (double)(curr->rtt) / 1000.0);
 	ft_memcpy(last_address, &(curr->addr), sizeof(*last_address));
 	store_cmpswp(ST_REACHED, storev_zero(), storev_uint(curr->reached));
