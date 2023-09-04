@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 11:30:50 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/04 16:35:07 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/09/04 17:30:19 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,7 @@
 #include <stdlib.h>
 
 #include "inc/ft_stdutil.h"
-
-struct	s_cli_builder
-{
-	char	*host;
-	size_t	index;
-};
+#include "inc/extra_cli.h"
 
 __attribute__ ((__noreturn__))
 static void	usage(void)
@@ -55,26 +50,37 @@ static void	extra_arg(size_t idx, char *host)
 
 static void	build_from(struct s_cli_builder *builder, char *arg)
 {
-	if (arg[0] == '-')
+	if (builder->state != CLI_EMPTY)
+		cli_handle_state(builder, arg);
+	else if (arg[0] == '-')
 	{
 		if (ft_strcmp(arg, "--help") == 0)
 			usage();
+		else if (ft_strcmp(arg, "-m") == 0)
+			builder->state = CLI_MAX_TTL;
 		else
 			bad_option(builder->index, arg);
 	}
-	if (builder->host != NULL)
-		extra_arg(builder->index, arg);
-	builder->host = arg;
+	else
+	{
+		if (builder->host != NULL)
+			extra_arg(builder->index, arg);
+		builder->host = arg;
+	}
 	builder->index += 1;
 }
 
-char	*cli(t_slice args)
+t_cli	cli(t_slice args)
 {
 	struct s_cli_builder	builder;
+	t_cli					result;
 
 	ft_memset(&builder, 0, sizeof(builder));
+	builder.max_ttl = 30;
 	slice_charptr_buildfrom(&args, (void *)build_from, &builder);
 	if (builder.host == NULL)
 		usage();
-	return (builder.host);
+	result.host = builder.host;
+	result.max_ttl = builder.max_ttl;
+	return (result);
 }

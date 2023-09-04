@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 17:26:24 by clsaad            #+#    #+#             */
-/*   Updated: 2023/09/04 15:56:40 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/09/04 17:27:49 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 #include "inc/ft_stdutil.h"
 
-static struct addrinfo	*resolve_host(char *host)
+static struct addrinfo	*resolve_host(const char *host)
 {
 	struct addrinfo	hints;
 	struct addrinfo	*result;
@@ -39,7 +39,7 @@ static struct addrinfo	*resolve_host(char *host)
 	return (result);
 }
 
-t_sockaddr_res	select_interface(char *address)
+t_sockaddr_res	select_interface(const char *address)
 {
 	struct addrinfo	*current;
 	struct addrinfo	*resolved;

@@ -1,28 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cli.h                                              :+:      :+:    :+:   */
+/*   extra_cli.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/31 13:20:55 by clsaad            #+#    #+#             */
-/*   Updated: 2023/09/04 17:23:32 by clsaad           ###   ########.fr       */
+/*   Created: 2023/09/04 16:09:19 by clsaad            #+#    #+#             */
+/*   Updated: 2023/09/04 17:06:08 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLI_H
-# define CLI_H
+#ifndef EXTRA_CLI_H
+# define EXTRA_CLI_H
 
 # include <stdint.h>
+# include <stddef.h>
 
-# include "slice.h"
-
-typedef struct s_cli
+enum e_builder_state
 {
-	const char	*host;
-	uint16_t	max_ttl;
-}	t_cli;
+	CLI_EMPTY = 0,
+	CLI_MAX_TTL = 1
+};
 
-t_cli	cli(t_slice args);
+struct	s_cli_builder
+{
+	char					*host;
+	uint16_t				max_ttl;
+	enum e_builder_state	state;
+	size_t					index;
+};
 
-#endif // CLI_H
+void	cli_handle_state(struct s_cli_builder *builder, char *arg);
+
+#endif // EXTRA_CLI_H

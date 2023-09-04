@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 11:30:51 by clsaad            #+#    #+#             */
-/*   Updated: 2023/09/04 15:49:17 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/09/04 17:26:56 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <netdb.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "inc/base.h"
 #include "inc/cli.h"
@@ -70,7 +71,7 @@ static bool	listen_response(int raw_socket, t_window window_start, size_t count)
 	return (print_time(resp_inf, receive_time, &receive_time_offset, true));
 }
 
-static void	loop(int raw_socket, t_sockaddr_res addr)
+static void	loop(int raw_socket, t_sockaddr_res addr, uint16_t max_ttl)
 {
 	size_t		iter_sent;
 	t_window	current_window;
@@ -79,10 +80,10 @@ static void	loop(int raw_socket, t_sockaddr_res addr)
 
 	ft_memset(&current_window, 0, sizeof(current_window));
 	ft_memset(&previous_window, 0, sizeof(previous_window));
-	while (current_window.start_hop < 30)
+	while (current_window.start_hop < max_ttl)
 	{
 		iter_sent = 0;
-		while (iter_sent++ < 16 && current_window.start_hop < 30)
+		while (iter_sent++ < 16 && current_window.start_hop < max_ttl)
 		{
 			udp_socket = create_udp_socket((int)current_window.start_hop + 1);
 			if (sendto(udp_socket, "ZARMAPIPOUDOU69", 15, 0,
@@ -100,20 +101,22 @@ static void	loop(int raw_socket, t_sockaddr_res addr)
 
 int	main(int argc, char **argv)
 {
-	char				*target;
+	t_cli				conf;
 	t_sockaddr_res		sockaddr;
 	struct sockaddr_in	*addr_in;
 	int					raw_socket;
 
-	target = cli(slice_new(argv + 1, argc - 1));
-	sockaddr = select_interface(target);
+	conf = cli(slice_new(argv + 1, argc - 1));
+	sockaddr = select_interface(conf.host);
+	if (!sockaddr.is_valid)
+		exit(2);
 	addr_in = (struct sockaddr_in *)&sockaddr.sock_addr;
 	raw_socket = create_raw_socket();
 	set_socket_timeout(raw_socket, 0, 100000);
 	addr_in->sin_port = ntohs(START_PORT);
-	printf("traceroute to %s (%s), 30 hops max, 15 byte packets\n",
-		target, inet_ntoa(addr_in->sin_addr));
-	loop(raw_socket, sockaddr);
+	printf("traceroute to %s (%s), %u hops max, 15 byte packets\n",
+		conf.host, inet_ntoa(addr_in->sin_addr), conf.max_ttl);
+	loop(raw_socket, sockaddr, conf.max_ttl);
 	close(raw_socket);
 	return (0);
 }

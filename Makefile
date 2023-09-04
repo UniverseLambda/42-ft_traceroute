@@ -5,6 +5,7 @@ NAME := ft_traceroute
 BUILD_TYPE := PROD
 
 SRC_FILES := cli.c \
+				extra_cli.c \
 				ft_icmp.c \
 				ft_socket.c \
 				ft_stdutil.c \
@@ -23,6 +24,7 @@ SRC_FILES := cli.c \
 
 INC_FILES := base.h \
 				cli.h \
+				extra_cli.h \
 				ft_icmp.h \
 				ft_socket.h \
 				ft_stdutil.h \
@@ -69,6 +71,8 @@ fclean: clean
 	$(RM) -rf $(NAME)
 
 re: fclean all
+
+bonus: all
 
 prod_reminder:
 	@echo "Need to change BUILD_TYPE to PROD"
