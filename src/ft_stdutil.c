@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:26:44 by clsaad            #+#    #+#             */
-/*   Updated: 2023/08/04 16:37:45 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/09/05 10:46:21 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <stdlib.h>
 
 void	*ft_memset(void *dest, int v, size_t n)
 {
@@ -79,4 +80,5 @@ int	ft_strcmp(const char *s1, const char *s2)
 void	ft_perror(const char *action)
 {
 	fprintf(stderr, "ft_traceroute: %s: %s\n", action, strerror(errno));
+	exit(2);
 }
