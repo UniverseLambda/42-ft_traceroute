@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 11:30:50 by clsaad            #+#    #+#             */
-/*   Updated: 2023/09/05 10:57:53 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/09/05 11:15:51 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,11 @@ t_cli	cli(t_slice args)
 	ft_memset(&builder, 0, sizeof(builder));
 	builder.max_ttl = 30;
 	slice_charptr_buildfrom(&args, (void *)build_from, &builder);
+	if (builder.state != CLI_EMPTY)
+	{
+		fprintf(stderr, "Missing argument (argc %zu)\n", builder.index);
+		exit(2);
+	}
 	if (builder.host == NULL)
 		usage();
 	result.host = builder.host;
