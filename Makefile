@@ -50,8 +50,8 @@ LD := gcc
 RM := rm
 MKDIR := mkdir
 
-CFLAGS := $(CFLAGS) -g3 -Wall -Wextra -Werror -std=gnu89 -fsanitize=address -fsanitize=undefined -fstack-protector-all
-LDFLAGS := $(LDFLAGS) -g3 -Wall -Wextra -Werror -std=gnu89 -fsanitize=address -fsanitize=undefined -fstack-protector-all
+CFLAGS := $(CFLAGS) -Wall -Wextra -Werror -std=gnu89 # -g3 -fsanitize=address -fsanitize=undefined -fstack-protector-all
+LDFLAGS := $(LDFLAGS) -Wall -Wextra -Werror -std=gnu89 # -g3 -fsanitize=address -fsanitize=undefined -fstack-protector-all
 
 CFLAGS += -D$(BUILD_TYPE)=
 
