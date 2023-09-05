@@ -6,7 +6,7 @@
 /*   By: clsaad <clsaad@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 11:30:50 by clsaad            #+#    #+#             */
-/*   Updated: 2023/09/05 11:23:12 by clsaad           ###   ########.fr       */
+/*   Updated: 2023/09/05 13:20:52 by clsaad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,8 @@ __attribute__ ((__noreturn__))
 static void	usage(void)
 {
 	fprintf(stderr, "Usage:\n  traceroute [ -m max_ttl ] host\nOptions:\n");
-	fprintf(stderr, "  -m max_ttl  --max-hops=max_ttl\n");
-	fprintf(stderr, "                              Set the max number of hops"
-		"(max TTL to be\n");
+	fprintf(stderr, "  -m max_ttl                  Set the max number\n");
+	fprintf(stderr, "                              of hops (max TTL to be\n");
 	fprintf(stderr, "                              reached). Default is 30\n");
 	fprintf(stderr, "  --help                      Read this help and exit\n");
 	fprintf(stderr, "Arguments:\n");
